@@ -19,11 +19,12 @@ import from nodes.Payout { Payout }
 import from nodes.LedgerEntry { LedgerEntry }
 import from nodes.AuditEvent { AuditEvent }
 import from services.merchant {
-    create_merchant,
-    get_merchant,
-    list_merchants,
-    add_merchant_wallet,
-    list_merchant_wallets
+    create_merchant as create_merchant_service,
+    get_merchant as get_merchant_service,
+    list_merchants as list_merchants_service,
+    add_merchant_wallet as add_merchant_wallet_service,
+    list_merchant_wallets as list_merchant_wallets_service,
+    delete_merchant_wallet as delete_merchant_wallet_service
 }
 import from services.invoice {
     create_invoice,
@@ -34,6 +35,7 @@ import from services.invoice {
 }
 import from services.payment {
     create_checkout_session,
+    create_checkout_for_wallet,
     get_checkout,
     stripe_webhook,
     mark_payment_succeeded,
@@ -59,9 +61,47 @@ import from services.audit {
     reconcile_invoice
 }
 
-cl import ".styles.global.css";
-cl import from components.AuthPortal { AuthPortal }
+def:priv create_merchant(legal_name: str, email: str, display_name: str = "") -> Merchant {
+    return create_merchant_service(
+        legal_name=legal_name,
+        email=email,
+        display_name=display_name,
+    );
+}
 
-cl def:pub app -> JsxElement {
-    return <AuthPortal />;
+def:priv get_merchant(merchant_id: str) -> Merchant {
+    return get_merchant_service(merchant_id=merchant_id);
+}
+
+def:priv list_merchants() -> list[Merchant] {
+    return list_merchants_service();
+}
+
+def:priv add_merchant_wallet(merchant_id: str, chain: str = "base", asset: str = "USDC", label: str = "primary") -> MerchantWallet {
+    print("add_merchant_wallet route hit", merchant_id, chain, asset, label);
+    return add_merchant_wallet_service(
+        merchant_id=merchant_id,
+        chain=chain,
+        asset=asset,
+        label=label,
+    );
+}
+
+def:priv list_merchant_wallets(merchant_id: str) -> list[MerchantWallet] {
+    return list_merchant_wallets_service(merchant_id=merchant_id);
+}
+
+def:priv delete_merchant_wallet(merchant_id: str, wallet_id: str) -> dict {
+    return delete_merchant_wallet_service(
+        merchant_id=merchant_id,
+        wallet_id=wallet_id,
+    );
+}
+
+cl {
+    import from frontend { app as ClientApp }
+
+    def:pub app -> JsxElement {
+        return <ClientApp />;
+    }
 }

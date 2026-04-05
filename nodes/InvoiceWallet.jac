@@ -2,8 +2,12 @@ import from datetime { datetime, timedelta }
 
 node InvoiceWallet {
     has invoice_wallet_id: str = "";
-    has provider: str = "wallet_provider";
+    has provider: str = "circle";
     has provider_wallet_id: str = "";
+    has provider_wallet_set_id: str = "";
+    has provider_ref_id: str = "";
+    has provider_state: str = "";
+    has custody_type: str = "DEVELOPER";
     has address: str = "";
     has chain: str = "base";
     has asset: str = "USDC";

@@ -1,3 +1,6 @@
+cl import from "@jac/runtime" { jacSignup, jacLogin, jacLogout, jacIsLoggedIn }
+sv import from main { create_merchant, list_merchants }
+
 def:pub LandingHero(props: dict) -> JsxElement {
     return <section className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
         <div className="space-y-6">
@@ -98,12 +101,12 @@ def:pub LoginForm(props: dict) -> JsxElement {
         </div>
         <div className="mt-8 space-y-5">
             <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-200"><span>Business email</span></label>
-                <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" value={str(email)} onChange={set_email} placeholder="founder@merchant.com" />
+                <label className="text-sm font-medium text-slate-200"><span>Email</span></label>
+                <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" value={str(email)} onInput={lambda e: ChangeEvent { set_email(e.target.value); }} placeholder="founder@merchant.com" />
             </div>
             <div className="space-y-2">
                 <label className="text-sm font-medium text-slate-200"><span>Password</span></label>
-                <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" type="password" value={str(password)} onChange={set_password} placeholder="••••••••••••" />
+                <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" type="password" value={str(password)} onInput={lambda e: ChangeEvent { set_password(e.target.value); }} placeholder="••••••••••••" />
             </div>
             <button className="w-full rounded-2xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90" onClick={submit}>
                 <span>Log in</span>
@@ -139,16 +142,16 @@ def:pub SignupForm(props: dict) -> JsxElement {
         </div>
         <div className="mt-8 grid gap-5 sm:grid-cols-2">
             <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-200"><span>Legal business name</span></label>
-                <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" value={str(legal_name)} onChange={set_legal_name} placeholder="Acme Commerce LLC" />
+                <label className="text-sm font-medium text-slate-200"><span>Legal name</span></label>
+                <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" value={str(legal_name)} onInput={lambda e: ChangeEvent { set_legal_name(e.target.value); }} placeholder="Acme Commerce LLC" />
             </div>
             <div className="space-y-2">
                 <label className="text-sm font-medium text-slate-200"><span>Screen name</span></label>
-                <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" value={str(display_name)} onChange={set_display_name} placeholder="Acme" />
+                <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" value={str(display_name)} onInput={lambda e: ChangeEvent { set_display_name(e.target.value); }} placeholder="Acme" />
             </div>
             <div className="space-y-2 sm:col-span-2">
-                <label className="text-sm font-medium text-slate-200"><span>Business email</span></label>
-                <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" value={str(email)} onChange={set_email} placeholder="ops@acme.com" />
+                <label className="text-sm font-medium text-slate-200"><span>Email</span></label>
+                <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" value={str(email)} onInput={lambda e: ChangeEvent { set_email(e.target.value); }} placeholder="ops@acme.com" />
             </div>
             <div className="space-y-2">
                 <label className="text-sm font-medium text-slate-400"><span>Account status</span></label>
@@ -269,6 +272,15 @@ def:pub AuthPortal(props: dict) -> JsxElement {
     has default_chain: str = "base";
     has default_asset: str = "USDC";
     has password: str = "";
+    has auth_error: str = "";
+
+    can with entry {
+        is_logged_in = jacIsLoggedIn();
+        if is_logged_in {
+            route = "dashboard";
+            sync_merchant_profile();
+        }
+    }
 
     can with [is_logged_in, route] entry {
         if is_logged_in and route == "landing" {
@@ -296,46 +308,87 @@ def:pub AuthPortal(props: dict) -> JsxElement {
         route = "dashboard";
     }
 
-    def set_legal_name(e: any) -> None {
-        legal_name = e.target.value;
+    def set_legal_name(value: str) -> None {
+        legal_name = value;
     }
 
-    def set_display_name(e: any) -> None {
-        display_name = e.target.value;
+    def set_display_name(value: str) -> None {
+        display_name = value;
     }
 
-    def set_email(e: any) -> None {
-        email = e.target.value;
+    def set_email(value: str) -> None {
+        email = value;
     }
 
-    def set_status(e: any) -> None {
-        status = e.target.value;
+    def set_status(value: str) -> None {
+        status = value;
     }
 
-    def set_default_chain(e: any) -> None {
-        default_chain = e.target.value;
+    def set_default_chain(value: str) -> None {
+        default_chain = value;
     }
 
-    def set_default_asset(e: any) -> None {
-        default_asset = e.target.value;
+    def set_default_asset(value: str) -> None {
+        default_asset = value;
     }
 
-    def set_password(e: any) -> None {
-        password = e.target.value;
+    def set_password(value: str) -> None {
+        password = value;
     }
 
-    def login_submit() -> None {
+    async def sync_merchant_profile {
+        merchants = await list_merchants();
+        if len(merchants) > 0 {
+            merchant = merchants[0];
+            legal_name = merchant.legal_name;
+            display_name = merchant.display_name;
+            email = merchant.email;
+            status = merchant.status;
+            default_chain = merchant.default_chain;
+            default_asset = merchant.default_asset;
+        }
+    }
+
+    async def login_submit {
+        auth_error = "";
+        success = await jacLogin(email.strip(), password);
+        if not success {
+            auth_error = "Invalid email or password.";
+            return;
+        }
         is_logged_in = True;
+        await sync_merchant_profile();
         route = "dashboard";
     }
 
-    def signup_submit() -> None {
+    async def signup_submit {
+        auth_error = "";
+        if not legal_name.strip() or not email.strip() {
+            auth_error = "Legal name and email are required.";
+            return;
+        }
+        if not password.strip() {
+            auth_error = "Password is required.";
+            return;
+        }
+        signup_result = await jacSignup(email.strip(), password);
+        if not signup_result["success"] {
+            auth_error = signup_result["error"] or "Signup failed.";
+            return;
+        }
+        merchant = await create_merchant(legal_name.strip(), email.strip(), display_name.strip());
+        legal_name = merchant.legal_name;
+        display_name = merchant.display_name;
+        email = merchant.email;
         is_logged_in = True;
         route = "dashboard";
     }
 
     def logout() -> None {
+        jacLogout();
         is_logged_in = False;
+        auth_error = "";
+        password = "";
         route = "landing";
     }
 
@@ -369,30 +422,112 @@ def:pub AuthPortal(props: dict) -> JsxElement {
             </header>
             <main className="flex-1 space-y-8 py-10">
                 {route == "landing" and (<LandingHero props={{"go_signup": go_signup, "go_login": go_login}} />)}
-                {route == "login" and (<LoginForm props={{
-                    "email": email,
-                    "password": password,
-                    "set_email": set_email,
-                    "set_password": set_password,
-                    "submit": login_submit,
-                    "go_home": go_landing
-                }} />)}
-                {route == "signup" and (<SignupForm props={{
-                    "legal_name": legal_name,
-                    "display_name": display_name,
-                    "email": email,
-                    "status": status,
-                    "default_chain": default_chain,
-                    "default_asset": default_asset,
-                    "set_legal_name": set_legal_name,
-                    "set_display_name": set_display_name,
-                    "set_email": set_email,
-                    "set_status": set_status,
-                    "set_default_chain": set_default_chain,
-                    "set_default_asset": set_default_asset,
-                    "submit": signup_submit,
-                    "go_home": go_landing
-                }} />)}
+                {route == "login" and (<div className="mx-auto w-full max-w-md rounded-[2rem] border border-white/10 bg-card/90 p-8 shadow-card backdrop-blur">
+                    <div className="space-y-2">
+                        <p className="text-sm uppercase tracking-[0.28em] text-cyan-200"><span>Welcome back</span></p>
+                        <h2 className="text-3xl font-semibold text-white"><span>Log in to your merchant account</span></h2>
+                        <p className="text-sm leading-6 text-slate-300"><span>Access invoice activity, payout status, and wallet operations from one Jac-powered dashboard.</span></p>
+                    </div>
+                    <div className="mt-8 space-y-5">
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium text-slate-200"><span>Email</span></label>
+                            <input
+                                className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+                                value={email}
+                                onInput={lambda e: ChangeEvent { email = e.target.value; }}
+                                placeholder="founder@merchant.com"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium text-slate-200"><span>Password</span></label>
+                            <input
+                                className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+                                type="password"
+                                value={password}
+                                onInput={lambda e: ChangeEvent { password = e.target.value; }}
+                                placeholder="••••••••••••"
+                            />
+                        </div>
+                        {(auth_error != "") and (
+                            <p className="text-sm text-rose-300">{auth_error}</p>
+                        )}
+                        <button className="w-full rounded-2xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90" onClick={login_submit}>
+                            <span>Log in</span>
+                        </button>
+                        <button className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10" onClick={go_landing}>
+                            <span>Back to landing</span>
+                        </button>
+                    </div>
+                </div>)}
+                {route == "signup" and (<div className="mx-auto w-full max-w-2xl rounded-[2rem] border border-white/10 bg-card/90 p-8 shadow-card backdrop-blur">
+                    <div className="space-y-2">
+                        <p className="text-sm uppercase tracking-[0.28em] text-cyan-200"><span>Get started</span></p>
+                        <h2 className="text-3xl font-semibold text-white"><span>Create a merchant</span></h2>
+                        <p className="text-sm leading-6 text-slate-300"><span>This form matches the Merchant node exactly.</span></p>
+                    </div>
+                    <div className="mt-8 grid gap-5 sm:grid-cols-2">
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium text-slate-200"><span>Legal name</span></label>
+                            <input
+                                className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+                                value={legal_name}
+                                onInput={lambda e: ChangeEvent { legal_name = e.target.value; }}
+                                placeholder="Acme Commerce LLC"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium text-slate-200"><span>Screen name</span></label>
+                            <input
+                                className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+                                value={display_name}
+                                onInput={lambda e: ChangeEvent { display_name = e.target.value; }}
+                                placeholder="Acme"
+                            />
+                        </div>
+                        <div className="space-y-2 sm:col-span-2">
+                            <label className="text-sm font-medium text-slate-200"><span>Email</span></label>
+                            <input
+                                className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+                                value={email}
+                                onInput={lambda e: ChangeEvent { email = e.target.value; }}
+                                placeholder="ops@acme.com"
+                            />
+                        </div>
+                        <div className="space-y-2 sm:col-span-2">
+                            <label className="text-sm font-medium text-slate-200"><span>Password</span></label>
+                            <input
+                                className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+                                type="password"
+                                value={password}
+                                onInput={lambda e: ChangeEvent { password = e.target.value; }}
+                                placeholder="Create a password"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium text-slate-400"><span>Account status</span></label>
+                            <input className="w-full cursor-default rounded-2xl border border-white/5 bg-slate-950/40 px-4 py-3 text-slate-400 outline-none" value={status} placeholder="active" disabled={True} />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium text-slate-400"><span>Default chain</span></label>
+                            <input className="w-full cursor-default rounded-2xl border border-white/5 bg-slate-950/40 px-4 py-3 text-slate-400 outline-none" value={default_chain} placeholder="base" disabled={True} />
+                        </div>
+                        <div className="space-y-2 sm:col-span-2">
+                            <label className="text-sm font-medium text-slate-400"><span>Settlement asset</span></label>
+                            <input className="w-full cursor-default rounded-2xl border border-white/5 bg-slate-950/40 px-4 py-3 text-slate-400 outline-none" value={default_asset} placeholder="USDC" disabled={True} />
+                        </div>
+                        <div className="sm:col-span-2 grid gap-3">
+                            {(auth_error != "") and (
+                                <p className="text-sm text-rose-300">{auth_error}</p>
+                            )}
+                            <button className="w-full rounded-2xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90" onClick={signup_submit}>
+                                <span>Create account</span>
+                            </button>
+                            <button className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10" onClick={go_landing}>
+                                <span>Back to landing</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>)}
                 {route == "dashboard" and (<DashboardView props={{
                     "welcome_text": welcome_text,
                     "email": dashboard_email,
