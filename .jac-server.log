@@ -1,0 +1,16 @@
+✖ Error: Error loading main.jac: attempted relative import with no known parent package
+✖ Error: Error: attempted relative import with no known parent package
+    1 | import from .config {
+      | ^
+    2 |     IntegrationConfig,
+    3 |     seed_demo_config,
+    4 |     list_configs
+    5 | }
+  at <module> /root/.jac-ide/projects/2ffe72fe-3c62-450e-8330-1f82f57054ed/prj_1775374809878/main.jac:1
+  ... [internal runtime calls]
+  at _load_unlocked() <frozen importlib._bootstrap>:935
+  at _find_and_load_unlocked() <frozen importlib._bootstrap>:1331
+  at _find_and_load() <frozen importlib._bootstrap>:1360
+  at _gcd_import() <frozen importlib._bootstrap>:1387
+  at import_module() /usr/local/lib/python3.12/importlib/__init__.py:90
+  ... [internal runtime calls]

@@ -1,25 +1,17 @@
-# Project: crypto_settlement_backend
-## Status: DONE
+# Progress
+
 ## Plan
-1. [x] Inspect current Jac project and syntax docs
-2. [x] Create graph-native backend service files
-3. [x] Register backend routes in main.jac
-4. [x] Run Jac validation and fix syntax/runtime issues
+- Inspect current AuthPortal client component and app imports.
+- Replace invalid/legacy JSX patterns with current Jac frontend syntax.
+- Keep local MVP auth state only with landing, login, signup, and dashboard views.
+- Add redirect effect from landing to dashboard when logged in.
+- Start app and validate browser render.
+
 ## Files
-- main.jac — backend endpoint registration + minimal app shell
-- services/config.sv.jac — provider config nodes and bootstrap
-- services/platform.sv.jac — platform root helpers
-- services/merchant.sv.jac — merchants and merchant wallets
-- services/invoice.sv.jac — invoice graph and lookup routes
-- services/payment.sv.jac — checkout sessions and webhook events
-- services/wallets.sv.jac — per-invoice wallet lifecycle
-- services/settlement.sv.jac — treasury lots and payouts
-- services/audit.sv.jac — ledger and audit events
+- components/AuthPortal.cl.jac
+
 ## Issues
-- Existing project was still a countdown frontend; backend files were missing.
-- Direct CLI endpoint smoke test was limited, so validation relied on successful Jac compile/HMR and browser render.
+- Existing component used unsupported patterns like ternary JSX, fragment syntax, and non-typed `has` locals inside helper components.
+
 ## Learnings
-- Backend endpoints belong in services/*.sv.jac and must be imported in main.jac to register.
-- Typed node returns compile cleanly for graph-native backend modeling.
-## Last Action
-Completed backend graph structure, registered routes, and validated the app preview renders with the new backend shell.
+- Jac client components should prefer `has` state with explicit types, `def` methods, `can with [deps] entry` for effects, and conditional rendering with `and`.
