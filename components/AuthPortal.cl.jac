@@ -85,31 +85,19 @@ def:pub LandingHero(props: dict) -> JsxElement {
 def:pub AuthForm(props: dict) -> JsxElement {
     return <div className="mx-auto w-full max-w-3xl rounded-[2rem] border border-white/10 bg-card/90 p-8 shadow-card backdrop-blur">
         <div className="space-y-2">
-            <p className="text-sm uppercase tracking-[0.28em] text-cyan-200">{str(props["eyebrow"])}</p>
-            <h2 className="text-3xl font-semibold text-white">{str(props["title"])}</h2>
-            <p className="text-sm leading-6 text-slate-300">{str(props["subtitle"])}</p>
+            <p className="text-sm uppercase tracking-[0.28em] text-cyan-200">{props["eyebrow"] or ""}</p>
+            <h2 className="text-3xl font-semibold text-white">{props["title"] or ""}</h2>
+            <p className="text-sm leading-6 text-slate-300">{props["subtitle"] or ""}</p>
         </div>
         <div className="mt-8 space-y-5">
             {props["show_signup_fields"] and (
                 <div className="grid gap-5 sm:grid-cols-2">
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-200"><span>First name</span></label>
-                        <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" value={str(props["first_name"])} onChange={props["set_first_name"]} placeholder="Avery" />
-                    </div>
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-200"><span>Last name</span></label>
-                        <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" value={str(props["last_name"])} onChange={props["set_last_name"]} placeholder="Cole" />
-                    </div>
-                </div>
-            )}
-            {props["show_signup_fields"] and (
-                <div className="grid gap-5 sm:grid-cols-2">
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-200"><span>Legal business name</span></label>
+                        <label className="text-sm font-medium text-slate-200"><span>Name</span></label>
                         <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" value={str(props["legal_name"])} onChange={props["set_legal_name"]} placeholder="Acme Commerce LLC" />
                     </div>
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-200"><span>Display name</span></label>
+                        <label className="text-sm font-medium text-slate-200"><span>Screen name</span></label>
                         <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" value={str(props["display_name"])} onChange={props["set_display_name"]} placeholder="Acme Commerce" />
                     </div>
                 </div>
