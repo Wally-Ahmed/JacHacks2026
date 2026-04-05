@@ -1,16 +1,29 @@
 import from datetime { datetime }
+import os;
 import from .config { IntegrationConfig, seed_demo_config }
 
 node Platform {
     has platform_id: str = "platform";
-    has name: str = "FILL_ME_PLATFORM_NAME";
-    has environment: str = "dev";
-    has default_chain: str = "base";
-    has default_asset: str = "USDC";
+    has name: str = "";
+    has environment: str = "";
+    has default_chain: str = "";
+    has default_asset: str = "";
     has status: str = "active";
     has created_at: str = "";
 
     def postinit {
+        if not self.name {
+            self.name = os.getenv("PLATFORM_NAME") or "FILL_ME_PLATFORM_NAME";
+        }
+        if not self.environment {
+            self.environment = os.getenv("APP_ENV") or "dev";
+        }
+        if not self.default_chain {
+            self.default_chain = os.getenv("DEFAULT_CHAIN") or "base";
+        }
+        if not self.default_asset {
+            self.default_asset = os.getenv("DEFAULT_ASSET") or "USDC";
+        }
         if not self.created_at {
             self.created_at = datetime.now().isoformat();
         }
@@ -19,6 +32,10 @@ node Platform {
 
 def get_platform_node() -> Platform {
     for item in [root()-->][?:Platform] {
+        item.name = os.getenv("PLATFORM_NAME") or item.name or "FILL_ME_PLATFORM_NAME";
+        item.environment = os.getenv("APP_ENV") or item.environment or "dev";
+        item.default_chain = os.getenv("DEFAULT_CHAIN") or item.default_chain or "base";
+        item.default_asset = os.getenv("DEFAULT_ASSET") or item.default_asset or "USDC";
         return item;
     }
     return (root() ++> Platform())[0];
@@ -34,16 +51,22 @@ def:pub bootstrap_platform() -> dict {
         "default_chain": platform.default_chain,
         "default_asset": platform.default_asset,
         "config_count": len(configs),
-        "fill_in": {
-            "platform_name": "FILL_ME_PLATFORM_NAME",
-            "stripe_publishable_key": "pk_test_FILL_ME_STRIPE_PUBLISHABLE_KEY",
-            "stripe_secret_key": "sk_test_FILL_ME_STRIPE_SECRET_KEY",
-            "stripe_webhook_secret": "whsec_FILL_ME_STRIPE_WEBHOOK_SECRET",
-            "wallet_provider_api_key": "FILL_ME_WALLET_PROVIDER_API_KEY",
-            "wallet_provider_secret": "FILL_ME_WALLET_PROVIDER_SECRET",
-            "treasury_wallet": "0xFILL_ME_TREASURY_WALLET",
-            "rpc_url": "https://FILL_ME_RPC_URL",
-            "usdc_contract": "0xFILL_ME_USDC_CONTRACT"
+        "env_keys": {
+            "platform_name": "PLATFORM_NAME",
+            "app_env": "APP_ENV",
+            "app_mode": "APP_MODE",
+            "default_chain": "DEFAULT_CHAIN",
+            "default_asset": "DEFAULT_ASSET",
+            "stripe_publishable_key": "STRIPE_PUBLISHABLE_KEY",
+            "stripe_secret_key": "STRIPE_SECRET_KEY",
+            "stripe_webhook_secret": "STRIPE_WEBHOOK_SECRET",
+            "wallet_provider_name": "WALLET_PROVIDER_NAME",
+            "wallet_provider_api_key": "WALLET_PROVIDER_API_KEY",
+            "wallet_provider_secret": "WALLET_PROVIDER_SECRET",
+            "treasury_wallet": "TREASURY_WALLET",
+            "rpc_url": "RPC_URL",
+            "usdc_contract": "USDC_CONTRACT",
+            "chain_id": "CHAIN_ID"
         }
     };
 }
