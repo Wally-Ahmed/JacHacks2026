@@ -1,41 +1,8 @@
 import from datetime { datetime }
-import from .invoice { Invoice, find_invoice }
-
-node CheckoutSession {
-    has checkout_id: str = "";
-    has provider: str = "stripe";
-    has provider_session_id: str = "";
-    has provider_payment_intent_id: str = "";
-    has hosted_url: str = "";
-    has amount_total: float = 0.0;
-    has currency: str = "USD";
-    has status: str = "created";
-    has created_at: str = "";
-    has updated_at: str = "";
-
-    def postinit {
-        now = datetime.now().isoformat();
-        if not self.created_at { self.created_at = now; }
-        if not self.updated_at { self.updated_at = now; }
-    }
-}
-
-node PaymentEvent {
-    has event_id: str = "";
-    has provider: str = "stripe";
-    has provider_event_id: str = "";
-    has event_type: str = "";
-    has payment_status: str = "pending";
-    has payload_hash: str = "placeholder_payload_hash";
-    has received_at: str = "";
-    has processed_at: str = "";
-
-    def postinit {
-        now = datetime.now().isoformat();
-        if not self.received_at { self.received_at = now; }
-        if not self.processed_at { self.processed_at = now; }
-    }
-}
+import from ..nodes.CheckoutSession { CheckoutSession }
+import from ..nodes.PaymentEvent { PaymentEvent }
+import from ..nodes.Invoice { Invoice }
+import from .invoice { find_invoice }
 
 def find_checkout_for_invoice(invoice: Invoice) -> CheckoutSession {
     for checkout in [invoice-->][?:CheckoutSession] {

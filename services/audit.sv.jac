@@ -1,41 +1,11 @@
 import from datetime { datetime }
-import from .invoice { Invoice, find_invoice }
-import from .merchant { Merchant, find_merchant }
-import from .settlement { Payout }
-
-node LedgerEntry {
-    has entry_id: str = "";
-    has entry_type: str = "";
-    has asset: str = "USDC";
-    has amount: float = 0.0;
-    has direction: str = "internal";
-    has reference_id: str = "";
-    has note: str = "";
-    has created_at: str = "";
-
-    def postinit {
-        if not self.created_at {
-            self.created_at = datetime.now().isoformat();
-        }
-    }
-}
-
-node AuditEvent {
-    has audit_id: str = "";
-    has actor: str = "system";
-    has action: str = "";
-    has target_type: str = "";
-    has target_id: str = "";
-    has result: str = "ok";
-    has notes: str = "";
-    has created_at: str = "";
-
-    def postinit {
-        if not self.created_at {
-            self.created_at = datetime.now().isoformat();
-        }
-    }
-}
+import from ..nodes.LedgerEntry { LedgerEntry }
+import from ..nodes.AuditEvent { AuditEvent }
+import from ..nodes.Invoice { Invoice }
+import from ..nodes.Merchant { Merchant }
+import from ..nodes.Payout { Payout }
+import from .invoice { find_invoice }
+import from .merchant { find_merchant }
 
 def append_invoice_ledger(invoice: Invoice, entry_type: str, amount: float = 0.0, asset: str = "USDC", direction: str = "internal", note: str = "") -> LedgerEntry {
     return (invoice ++> LedgerEntry(

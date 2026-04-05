@@ -1,45 +1,10 @@
 import from datetime { datetime }
-import from .invoice { Invoice, find_invoice }
-import from .wallets { InvoiceWallet, create_invoice_wallet, find_invoice_wallet }
-
-node TreasuryLot {
-    has treasury_lot_id: str = "";
-    has asset: str = "USDC";
-    has chain: str = "base";
-    has amount: float = 0.0;
-    has available_amount: float = 0.0;
-    has reserved_amount: float = 0.0;
-    has source: str = "treasury";
-    has status: str = "available";
-    has created_at: str = "";
-
-    def postinit {
-        if not self.created_at {
-            self.created_at = datetime.now().isoformat();
-        }
-    }
-}
-
-node Payout {
-    has payout_id: str = "";
-    has invoice_id: str = "";
-    has asset: str = "USDC";
-    has amount: float = 0.0;
-    has destination_address: str = "";
-    has tx_hash: str = "";
-    has status: str = "pending";
-    has broadcast_at: str = "";
-    has confirmed_at: str = "";
-    has failure_reason: str = "";
-    has created_at: str = "";
-    has updated_at: str = "";
-
-    def postinit {
-        now = datetime.now().isoformat();
-        if not self.created_at { self.created_at = now; }
-        if not self.updated_at { self.updated_at = now; }
-    }
-}
+import from ..nodes.TreasuryLot { TreasuryLot }
+import from ..nodes.Payout { Payout }
+import from ..nodes.Invoice { Invoice }
+import from ..nodes.InvoiceWallet { InvoiceWallet }
+import from .invoice { find_invoice }
+import from .wallets { create_invoice_wallet, find_invoice_wallet }
 
 def get_or_create_treasury_lot() -> TreasuryLot {
     for lot in [root()-->][?:TreasuryLot] {

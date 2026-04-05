@@ -1,27 +1,6 @@
 import from datetime { datetime }
 import os;
-
-node IntegrationConfig {
-    has config_id: str = "";
-    has provider: str = "";
-    has label: str = "";
-    has api_key: str = "";
-    has secret_key: str = "";
-    has webhook_secret: str = "";
-    has rpc_url: str = "";
-    has treasury_wallet: str = "";
-    has usdc_contract: str = "";
-    has chain_id: str = "";
-    has enabled: bool = True;
-    has mode: str = "test";
-    has updated_at: str = "";
-
-    def postinit {
-        if not self.updated_at {
-            self.updated_at = datetime.now().isoformat();
-        }
-    }
-}
+import from .nodes.IntegrationConfig { IntegrationConfig }
 
 def env_or(env_name: str, fallback: str) -> str {
     value = os.getenv(env_name);
