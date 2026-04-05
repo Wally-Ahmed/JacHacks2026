@@ -1,11 +1,11 @@
 """Graph-native backend for fiat-to-USDC settlement MVP."""
 
-import from config {
+import from .config {
     IntegrationConfig,
     seed_demo_config,
     list_configs
 }
-import from app_platform {
+import from .app_platform {
     Platform,
     bootstrap_platform,
     get_platform_overview
