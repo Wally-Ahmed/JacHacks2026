@@ -82,58 +82,94 @@ def:pub LandingHero(props: dict) -> JsxElement {
     </section>;
 }
 
-def:pub AuthForm(props: dict) -> JsxElement {
+def:pub LoginForm(props: dict) -> JsxElement {
+    email = props["email"] or "";
+    password = props["password"] or "";
+    set_email = props["set_email"];
+    set_password = props["set_password"];
+    submit = props["submit"];
+    go_home = props["go_home"];
+
     return <div className="mx-auto w-full max-w-md rounded-[2rem] border border-white/10 bg-card/90 p-8 shadow-card backdrop-blur">
         <div className="space-y-2">
-            <p className="text-sm uppercase tracking-[0.28em] text-cyan-200">{str(props["eyebrow"])}</p>
-            <h2 className="text-3xl font-semibold text-white">{str(props["title"])}</h2>
-            <p className="text-sm leading-6 text-slate-300">{str(props["subtitle"])}</p>
+            <p className="text-sm uppercase tracking-[0.28em] text-cyan-200"><span>Welcome back</span></p>
+            <h2 className="text-3xl font-semibold text-white"><span>Log in to your merchant account</span></h2>
+            <p className="text-sm leading-6 text-slate-300"><span>Access invoice activity, payout status, and wallet operations from one Jac-powered dashboard.</span></p>
         </div>
         <div className="mt-8 space-y-5">
-            {props["show_signup_fields"] and (
-                <div className="grid gap-5 sm:grid-cols-2">
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-200"><span>First name</span></label>
-                        <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" value={str(props["first_name"])} onChange={props["set_first_name"]} placeholder="Avery" />
-                    </div>
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-200"><span>Last name</span></label>
-                        <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" value={str(props["last_name"])} onChange={props["set_last_name"]} placeholder="Cole" />
-                    </div>
-                </div>
-            )}
-            {props["show_signup_fields"] and (
-                <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-200"><span>Company name</span></label>
-                    <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" value={str(props["company_name"])} onChange={props["set_company_name"]} placeholder="Acme Commerce" />
-                </div>
-            )}
-            {props["show_signup_fields"] and (
-                <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-200"><span>Business website</span></label>
-                    <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" value={str(props["website"])} onChange={props["set_website"]} placeholder="https://acmecommerce.com" />
-                </div>
-            )}
             <div className="space-y-2">
                 <label className="text-sm font-medium text-slate-200"><span>Business email</span></label>
-                <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" value={str(props["email"])} onChange={props["set_email"]} placeholder="founder@merchant.com" />
+                <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" value={str(email)} onChange={set_email} placeholder="founder@merchant.com" />
             </div>
-            {props["show_signup_fields"] and (
-                <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-200"><span>Business type</span></label>
-                    <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" value={str(props["business_type"])} onChange={props["set_business_type"]} placeholder="Marketplace, SaaS, agency..." />
-                </div>
-            )}
             <div className="space-y-2">
                 <label className="text-sm font-medium text-slate-200"><span>Password</span></label>
-                <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" type="password" value={str(props["password"])} onChange={props["set_password"]} placeholder="••••••••••••" />
+                <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" type="password" value={str(password)} onChange={set_password} placeholder="••••••••••••" />
             </div>
-            <button className="w-full rounded-2xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90" onClick={props["submit"]}>
-                {str(props["button_text"])}
+            <button className="w-full rounded-2xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90" onClick={submit}>
+                <span>Log in</span>
             </button>
-            <button className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10" onClick={props["go_home"]}>
+            <button className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10" onClick={go_home}>
                 <span>Back to landing</span>
             </button>
+        </div>
+    </div>;
+}
+
+def:pub SignupForm(props: dict) -> JsxElement {
+    legal_name = props["legal_name"] or "";
+    display_name = props["display_name"] or "";
+    email = props["email"] or "";
+    status = props["status"] or "active";
+    default_chain = props["default_chain"] or "base";
+    default_asset = props["default_asset"] or "USDC";
+    set_legal_name = props["set_legal_name"];
+    set_display_name = props["set_display_name"];
+    set_email = props["set_email"];
+    set_status = props["set_status"];
+    set_default_chain = props["set_default_chain"];
+    set_default_asset = props["set_default_asset"];
+    submit = props["submit"];
+    go_home = props["go_home"];
+
+    return <div className="mx-auto w-full max-w-2xl rounded-[2rem] border border-white/10 bg-card/90 p-8 shadow-card backdrop-blur">
+        <div className="space-y-2">
+            <p className="text-sm uppercase tracking-[0.28em] text-cyan-200"><span>Get started</span></p>
+            <h2 className="text-3xl font-semibold text-white"><span>Create a merchant</span></h2>
+            <p className="text-sm leading-6 text-slate-300"><span>This form matches the Merchant node exactly.</span></p>
+        </div>
+        <div className="mt-8 grid gap-5 sm:grid-cols-2">
+            <div className="space-y-2">
+                <label className="text-sm font-medium text-slate-200"><span>legal_name</span></label>
+                <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" value={str(legal_name)} onChange={set_legal_name} placeholder="Acme Commerce LLC" />
+            </div>
+            <div className="space-y-2">
+                <label className="text-sm font-medium text-slate-200"><span>display_name</span></label>
+                <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" value={str(display_name)} onChange={set_display_name} placeholder="Acme" />
+            </div>
+            <div className="space-y-2 sm:col-span-2">
+                <label className="text-sm font-medium text-slate-200"><span>email</span></label>
+                <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" value={str(email)} onChange={set_email} placeholder="ops@acme.com" />
+            </div>
+            <div className="space-y-2">
+                <label className="text-sm font-medium text-slate-200"><span>status</span></label>
+                <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" value={str(status)} onChange={set_status} placeholder="active" />
+            </div>
+            <div className="space-y-2">
+                <label className="text-sm font-medium text-slate-200"><span>default_chain</span></label>
+                <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" value={str(default_chain)} onChange={set_default_chain} placeholder="base" />
+            </div>
+            <div className="space-y-2 sm:col-span-2">
+                <label className="text-sm font-medium text-slate-200"><span>default_asset</span></label>
+                <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" value={str(default_asset)} onChange={set_default_asset} placeholder="USDC" />
+            </div>
+            <div className="sm:col-span-2 grid gap-3">
+                <button className="w-full rounded-2xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90" onClick={submit}>
+                    <span>Create account</span>
+                </button>
+                <button className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10" onClick={go_home}>
+                    <span>Back to landing</span>
+                </button>
+            </div>
         </div>
     </div>;
 }
@@ -226,12 +262,12 @@ def:pub DashboardView(props: dict) -> JsxElement {
 def:pub AuthPortal(props: dict) -> JsxElement {
     has route: str = "landing";
     has is_logged_in: bool = False;
-    has first_name: str = "";
-    has last_name: str = "";
-    has company_name: str = "";
-    has website: str = "";
-    has business_type: str = "";
+    has legal_name: str = "";
+    has display_name: str = "";
     has email: str = "";
+    has status: str = "active";
+    has default_chain: str = "base";
+    has default_asset: str = "USDC";
     has password: str = "";
 
     can with [is_logged_in, route] entry {
@@ -260,28 +296,28 @@ def:pub AuthPortal(props: dict) -> JsxElement {
         route = "dashboard";
     }
 
-    def set_first_name(e: any) -> None {
-        first_name = e.target.value;
+    def set_legal_name(e: any) -> None {
+        legal_name = e.target.value;
     }
 
-    def set_last_name(e: any) -> None {
-        last_name = e.target.value;
-    }
-
-    def set_company_name(e: any) -> None {
-        company_name = e.target.value;
-    }
-
-    def set_website(e: any) -> None {
-        website = e.target.value;
-    }
-
-    def set_business_type(e: any) -> None {
-        business_type = e.target.value;
+    def set_display_name(e: any) -> None {
+        display_name = e.target.value;
     }
 
     def set_email(e: any) -> None {
         email = e.target.value;
+    }
+
+    def set_status(e: any) -> None {
+        status = e.target.value;
+    }
+
+    def set_default_chain(e: any) -> None {
+        default_chain = e.target.value;
+    }
+
+    def set_default_asset(e: any) -> None {
+        default_asset = e.target.value;
     }
 
     def set_password(e: any) -> None {
@@ -304,13 +340,10 @@ def:pub AuthPortal(props: dict) -> JsxElement {
     }
 
     welcome_text = "Welcome back, Merchant";
-    if first_name.strip() {
-        welcome_text = "Welcome back, " + first_name;
-        if company_name.strip() {
-            welcome_text = welcome_text + " from " + company_name;
-        }
-    } elif company_name.strip() {
-        welcome_text = "Welcome back, " + company_name;
+    if display_name.strip() {
+        welcome_text = "Welcome back, " + display_name;
+    } elif legal_name.strip() {
+        welcome_text = "Welcome back, " + legal_name;
     }
 
     dashboard_email = "founder@merchant.com";
@@ -336,49 +369,27 @@ def:pub AuthPortal(props: dict) -> JsxElement {
             </header>
             <main className="flex-1 space-y-8 py-10">
                 {route == "landing" and (<LandingHero props={{"go_signup": go_signup, "go_login": go_login}} />)}
-                {route == "login" and (<AuthForm props={{
-                    "eyebrow": "Welcome back",
-                    "title": "Log in to your merchant account",
-                    "subtitle": "Access invoice activity, payout status, and wallet operations from one Jac-powered dashboard.",
-                    "first_name": first_name,
-                    "last_name": last_name,
-                    "company_name": company_name,
-                    "website": website,
-                    "business_type": business_type,
+                {route == "login" and (<LoginForm props={{
                     "email": email,
                     "password": password,
-                    "set_first_name": set_first_name,
-                    "set_last_name": set_last_name,
-                    "set_company_name": set_company_name,
-                    "set_website": set_website,
-                    "set_business_type": set_business_type,
                     "set_email": set_email,
                     "set_password": set_password,
-                    "show_signup_fields": False,
-                    "button_text": "Log in",
                     "submit": login_submit,
                     "go_home": go_landing
                 }} />)}
-                {route == "signup" and (<AuthForm props={{
-                    "eyebrow": "Get started",
-                    "title": "Create your merchant portal",
-                    "subtitle": "Set up your account, connect Circle later, and start testing your Base Sepolia settlement flow.",
-                    "first_name": first_name,
-                    "last_name": last_name,
-                    "company_name": company_name,
-                    "website": website,
-                    "business_type": business_type,
+                {route == "signup" and (<SignupForm props={{
+                    "legal_name": legal_name,
+                    "display_name": display_name,
                     "email": email,
-                    "password": password,
-                    "set_first_name": set_first_name,
-                    "set_last_name": set_last_name,
-                    "set_company_name": set_company_name,
-                    "set_website": set_website,
-                    "set_business_type": set_business_type,
+                    "status": status,
+                    "default_chain": default_chain,
+                    "default_asset": default_asset,
+                    "set_legal_name": set_legal_name,
+                    "set_display_name": set_display_name,
                     "set_email": set_email,
-                    "set_password": set_password,
-                    "show_signup_fields": True,
-                    "button_text": "Create account",
+                    "set_status": set_status,
+                    "set_default_chain": set_default_chain,
+                    "set_default_asset": set_default_asset,
                     "submit": signup_submit,
                     "go_home": go_landing
                 }} />)}
