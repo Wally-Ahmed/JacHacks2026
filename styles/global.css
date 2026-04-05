@@ -1,226 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+@theme {
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --color-background: #07111f;
+    --color-foreground: #e5eefb;
+    --color-card: #0f1b2d;
+    --color-card-hover: #15243a;
+    --color-primary: #3b82f6;
+    --color-primary-foreground: #eff6ff;
+    --color-secondary: #14b8a6;
+    --color-muted: #0b1525;
+    --color-muted-foreground: #8ea3c0;
+    --color-border: #22324d;
+    --color-success: #22c55e;
+    --color-warning: #f59e0b;
+    --color-danger: #ef4444;
+    --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.18);
+    --shadow-card: 0 18px 50px rgba(2, 8, 23, 0.45);
+    --radius-lg: 1rem;
+}
 
-html, body {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
+.dark {
+    --color-background: #020817;
+    --color-foreground: #f8fafc;
+    --color-card: #0f172a;
+    --color-card-hover: #172033;
+    --color-muted: #0b1220;
+    --color-muted-foreground: #94a3b8;
+    --color-border: #1e293b;
+}
+
+html, body, #root {
+    min-height: 100vh;
 }
 
 body {
-  background: #080a10;
-  color: #ffffff;
+    margin: 0;
+    background:
+        radial-gradient(circle at top left, rgba(20, 184, 166, 0.18), transparent 28%),
+        radial-gradient(circle at top right, rgba(59, 130, 246, 0.18), transparent 24%),
+        linear-gradient(180deg, #07111f 0%, #020817 100%);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
 }
 
-/* ── App shell ─────────────────────────────────── */
-.cd-app {
-  background: radial-gradient(ellipse at 50% 40%, #111828 0%, #090c18 55%, #060810 100%);
+* {
+    box-sizing: border-box;
 }
-
-/* ── Bokeh layer ────────────────────────────────── */
-.cd-particle {
-  background: radial-gradient(
-    circle,
-    rgba(255, 255, 255, 0.95) 0%,
-    rgba(200, 215, 255, 0.5) 40%,
-    transparent 72%
-  );
-  animation: bokeh-drift ease-in-out infinite alternate;
-}
-
-@keyframes bokeh-drift {
-  0%   { transform: translate(0px, 0px) scale(1); }
-  33%  { transform: translate(10px, -18px) scale(1.04); }
-  66%  { transform: translate(-12px, -8px) scale(0.97); }
-  100% { transform: translate(6px, 14px) scale(1.02); }
-}
-
-.cd-title {
-  font-size: 20px;
-  font-weight: 300;
-  color: rgba(255, 255, 255, 0.72);
-  letter-spacing: 9px;
-  text-transform: uppercase;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-}
-
-.cd-change-btn {
-  appearance: none;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  background: rgba(255, 255, 255, 0.06);
-  color: rgba(255, 255, 255, 0.82);
-  padding: 10px 16px;
-  border-radius: 9999px;
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 2.6px;
-  text-transform: uppercase;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  cursor: pointer;
-  transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
-}
-
-.cd-change-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.24);
-  transform: translateY(-1px);
-}
-
-.cd-change-btn:active {
-  transform: translateY(0px);
-}
-
-.cd-edit-btn {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  background: transparent;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: rgba(255, 255, 255, 0.55);
-  transition: border-color 0.2s, color 0.2s, background 0.2s;
-  flex-shrink: 0;
-}
-.cd-edit-btn:hover {
-  border-color: rgba(0, 210, 255, 0.65);
-  color: #00d4ff;
-  background: rgba(0, 210, 255, 0.08);
-}
-
-/* ── Date editor panel ──────────────────────────── */
-.cd-editor {
-  gap: 18px;
-  background: rgba(6, 14, 30, 0.75);
-  border: 1px solid rgba(0, 200, 255, 0.18);
-  border-radius: 18px;
-  padding: 22px 36px 20px;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 200, 255, 0.06);
-}
-
-.cd-editor-label {
-  font-size: 9px;
-  letter-spacing: 4.5px;
-  color: rgba(255, 255, 255, 0.35);
-  text-transform: uppercase;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-}
-
-.cd-field-label {
-  font-size: 9px;
-  letter-spacing: 3px;
-  color: rgba(255, 255, 255, 0.3);
-  text-transform: uppercase;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-}
-
-.cd-stepper {
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(0, 200, 255, 0.18);
-  border-radius: 10px;
-}
-
-.cd-step-btn {
-  width: 32px;
-  height: 40px;
-  border: none;
-  background: transparent;
-  color: rgba(0, 210, 255, 0.75);
-  font-size: 18px;
-  line-height: 1;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  user-select: none;
-  transition: background 0.15s, color 0.15s;
-}
-.cd-step-btn:hover {
-  background: rgba(0, 210, 255, 0.12);
-  color: #00e8ff;
-}
-.cd-step-btn:active {
-  background: rgba(0, 210, 255, 0.22);
-}
-
-.cd-step-val {
-  min-width: 54px;
-  text-align: center;
-  font-size: 17px;
-  font-weight: 300;
-  color: #ffffff;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  letter-spacing: 1px;
-  border-left: 1px solid rgba(0, 200, 255, 0.12);
-  border-right: 1px solid rgba(0, 200, 255, 0.12);
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.cd-field-sep {
-  font-size: 20px;
-  color: rgba(255, 255, 255, 0.18);
-  font-weight: 200;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  padding-bottom: 2px;
-}
-
-.cd-done-btn {
-  background: linear-gradient(135deg, #006fcc 0%, #00c4a0 100%);
-  border: none;
-  border-radius: 10px;
-  color: #ffffff;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 3px;
-  padding: 11px 40px;
-  cursor: pointer;
-  transition: opacity 0.2s, transform 0.15s;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  text-transform: uppercase;
-  width: 100%;
-}
-.cd-done-btn:hover {
-  opacity: 0.85;
-  transform: translateY(-1px);
-}
-.cd-done-btn:active {
-  transform: translateY(0);
-  opacity: 1;
-}
-
-.cd-ring-num {
-  font-size: 54px;
-  font-weight: 300;
-  color: #ffffff;
-  line-height: 1;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-}
-
-.cd-ring-label {
-  font-size: 11px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.52);
-  letter-spacing: 3.5px;
-  text-transform: uppercase;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-}
-
-/* ── Crown ──────────────────────────────────────── */
-.cd-crown {
-  position: absolute;
-  bottom: 22px;
-  left: 22px;
-  font-size: 26px;
-  z-index: 10;
-  line-height: 1;
-}
-
-/* ── Scrollbar (hidden) ─────────────────────────── */
-::-webkit-scrollbar { display: none; }
