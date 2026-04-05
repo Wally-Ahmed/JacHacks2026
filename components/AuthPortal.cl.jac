@@ -98,12 +98,12 @@ def:pub LoginForm(props: dict) -> JsxElement {
         </div>
         <div className="mt-8 space-y-5">
             <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-200"><span>Business email</span></label>
-                <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" value={str(email)} onChange={set_email} placeholder="founder@merchant.com" />
+                <label className="text-sm font-medium text-slate-200"><span>Email</span></label>
+                <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" value={email} onInput={set_email} placeholder="founder@merchant.com" />
             </div>
             <div className="space-y-2">
                 <label className="text-sm font-medium text-slate-200"><span>Password</span></label>
-                <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" type="password" value={str(password)} onChange={set_password} placeholder="••••••••••••" />
+                <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" type="password" value={password} onInput={set_password} placeholder="••••••••••••" />
             </div>
             <button className="w-full rounded-2xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90" onClick={submit}>
                 <span>Log in</span>
@@ -139,28 +139,28 @@ def:pub SignupForm(props: dict) -> JsxElement {
         </div>
         <div className="mt-8 grid gap-5 sm:grid-cols-2">
             <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-200"><span>Legal business name</span></label>
-                <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" value={str(legal_name)} onChange={set_legal_name} placeholder="Acme Commerce LLC" />
+                <label className="text-sm font-medium text-slate-200"><span>Legal name</span></label>
+                <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" value={legal_name} onInput={set_legal_name} placeholder="Acme Commerce LLC" />
             </div>
             <div className="space-y-2">
                 <label className="text-sm font-medium text-slate-200"><span>Screen name</span></label>
-                <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" value={str(display_name)} onChange={set_display_name} placeholder="Acme" />
+                <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" value={display_name} onInput={set_display_name} placeholder="Acme" />
             </div>
             <div className="space-y-2 sm:col-span-2">
-                <label className="text-sm font-medium text-slate-200"><span>Business email</span></label>
-                <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" value={str(email)} onChange={set_email} placeholder="ops@acme.com" />
+                <label className="text-sm font-medium text-slate-200"><span>Email</span></label>
+                <input className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20" value={email} onInput={set_email} placeholder="ops@acme.com" />
             </div>
             <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-400"><span>Account status</span></label>
-                <input className="w-full cursor-default rounded-2xl border border-white/5 bg-slate-950/40 px-4 py-3 text-slate-400 outline-none" value={str(status)} placeholder="active" disabled={True} />
+                <label className="text-sm font-medium text-slate-400"><span>Status</span></label>
+                <input className="w-full cursor-default rounded-2xl border border-white/5 bg-slate-950/40 px-4 py-3 text-slate-400 outline-none pointer-events-none" value={status} placeholder="active" disabled={True} />
             </div>
             <div className="space-y-2">
                 <label className="text-sm font-medium text-slate-400"><span>Default chain</span></label>
-                <input className="w-full cursor-default rounded-2xl border border-white/5 bg-slate-950/40 px-4 py-3 text-slate-400 outline-none" value={str(default_chain)} placeholder="base" disabled={True} />
+                <input className="w-full cursor-default rounded-2xl border border-white/5 bg-slate-950/40 px-4 py-3 text-slate-400 outline-none pointer-events-none" value={default_chain} placeholder="base" disabled={True} />
             </div>
             <div className="space-y-2 sm:col-span-2">
-                <label className="text-sm font-medium text-slate-400"><span>Settlement asset</span></label>
-                <input className="w-full cursor-default rounded-2xl border border-white/5 bg-slate-950/40 px-4 py-3 text-slate-400 outline-none" value={str(default_asset)} placeholder="USDC" disabled={True} />
+                <label className="text-sm font-medium text-slate-400"><span>Default asset</span></label>
+                <input className="w-full cursor-default rounded-2xl border border-white/5 bg-slate-950/40 px-4 py-3 text-slate-400 outline-none pointer-events-none" value={default_asset} placeholder="USDC" disabled={True} />
             </div>
             <div className="sm:col-span-2 grid gap-3">
                 <button className="w-full rounded-2xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90" onClick={submit}>
