@@ -1,8 +1,9 @@
 import os;
 import from uuid { uuid4 }
 import from dotenv { load_dotenv }
-import from json { loads }
+import from json { loads, dumps }
 import from subprocess { run }
+import from builtins { open }
 import from nodes.Merchant { Merchant }
 import from nodes.MerchantWallet { MerchantWallet }
 
@@ -56,6 +57,84 @@ def circle_blockchain_for(chain: str) -> str {
         return "MATIC-AMOY";
     }
     return os.getenv("CIRCLE_BLOCKCHAIN", "BASE-SEPOLIA");
+}
+
+def wallet_registry_path() -> str {
+    return os.path.join(os.getcwd(), ".jac", "public_wallet_registry.json");
+}
+
+def load_public_wallet_registry() -> dict {
+    path = wallet_registry_path();
+    if not os.path.exists(path) {
+        return {};
+    }
+    with open(path, "r") as registry_file {
+        content = registry_file.read();
+        if not content.strip() {
+            return {};
+        }
+        return loads(content);
+    }
+}
+
+def save_public_wallet_registry(registry: dict) {
+    path = wallet_registry_path();
+    registry_dir = os.path.dirname(path);
+    if not os.path.exists(registry_dir) {
+        os.makedirs(registry_dir, exist_ok=True);
+    }
+    with open(path, "w") as registry_file {
+        registry_file.write(dumps(registry));
+    }
+}
+
+def register_public_wallet(merchant: Merchant, wallet: MerchantWallet) {
+    registry = load_public_wallet_registry();
+    registry[wallet.wallet_id] = {
+        "merchant_id": merchant.merchant_id,
+        "wallet_id": wallet.wallet_id,
+        "address": wallet.address,
+        "chain": wallet.chain,
+        "asset": wallet.asset,
+        "label": wallet.label,
+        "status": wallet.status,
+        "is_default": wallet.is_default,
+        "display_name": merchant.display_name,
+    };
+    save_public_wallet_registry(registry);
+}
+
+def remove_public_wallet(wallet_id: str) {
+    registry = load_public_wallet_registry();
+    if wallet_id in registry {
+        del registry[wallet_id];
+        save_public_wallet_registry(registry);
+    }
+}
+
+def find_public_wallet_record(wallet_id: str) -> dict {
+    registry = load_public_wallet_registry();
+    if wallet_id in registry {
+        return registry[wallet_id];
+    }
+    return {};
+}
+
+def find_public_wallet_for_merchant(merchant_id: str) -> dict {
+    registry = load_public_wallet_registry();
+    for wallet_id in registry {
+        record = registry[wallet_id];
+        if record["merchant_id"] == merchant_id and record["is_default"] and record["status"] == "active" {
+            return record;
+        }
+    }
+    for wallet_id in registry {
+        record = registry[wallet_id];
+        if record["merchant_id"] == merchant_id and record["status"] == "active" {
+            return record;
+        }
+    }
+    return {};
 }
 
 def create_circle_merchant_wallet(merchant: Merchant, chain: str, label: str) -> dict {
@@ -121,6 +200,7 @@ def:priv add_merchant_wallet(merchant_id: str, chain: str = "base", asset: str =
         is_default=len([merchant-->][?:MerchantWallet]) == 0,
     ))[0];
     print("merchant wallet node created", wallet.wallet_id, wallet.address);
+    register_public_wallet(merchant, wallet);
     return wallet;
 }
 
@@ -145,7 +225,10 @@ def:priv delete_merchant_wallet(merchant_id: str, wallet_id: str) -> dict {
     remaining = [merchant-->][?:MerchantWallet];
     if deleted_default and len(remaining) > 0 {
         remaining[0].is_default = True;
+        register_public_wallet(merchant, remaining[0]);
     }
+
+    remove_public_wallet(wallet_id);
 
     return {"deleted": wallet_id};
 }

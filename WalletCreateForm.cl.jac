@@ -47,7 +47,7 @@ def:pub WalletCreateForm(props: dict) -> JsxElement {
         wallet_asset = form_props["default_asset"] or "USDC";
         form_error = "";
         is_submitting = False;
-        await form_props["refreshWallets"](resolved_merchant_id);
+        window.location.reload();
     }
 
     return <div className="rounded-[2rem] border border-white/10 bg-card/90 p-8 shadow-card">

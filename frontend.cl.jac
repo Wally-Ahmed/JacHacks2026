@@ -199,6 +199,10 @@ def:pub app -> JsxElement {
                         </div>
                         <div className="grid gap-4 md:grid-cols-3">
                             <div className="rounded-[1.75rem] border border-white/10 bg-white/5 p-6 shadow-soft">
+                                <p className="text-sm text-slate-400"><span>Merchant ID</span></p>
+                                <p className="mt-3 break-all font-mono text-sm font-semibold text-white">{merchant_id or "Not loaded"}</p>
+                            </div>
+                            <div className="rounded-[1.75rem] border border-white/10 bg-white/5 p-6 shadow-soft">
                                 <p className="text-sm text-slate-400"><span>Email</span></p>
                                 <p className="mt-3 text-xl font-semibold text-white">{dashboard_email}</p>
                             </div>
@@ -245,6 +249,7 @@ def:pub app -> JsxElement {
                                                             <span className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-xs font-medium text-cyan-200"><span>Default</span></span>
                                                         )}
                                                     </div>
+                                                    <p className="break-all font-mono text-xs text-slate-400"><span>Wallet ID: </span>{wallet.wallet_id}</p>
                                                     <p className="break-all font-mono text-sm text-slate-300">{wallet.address}</p>
                                                     <div className="flex flex-wrap gap-3 text-sm text-slate-400">
                                                         <span>{wallet.chain}</span>
