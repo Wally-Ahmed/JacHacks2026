@@ -1,6 +1,5 @@
-import from nodes.Merchant { Merchant }
-import from nodes.Merchant { Merchant }
-import from nodes.MerchantWallet { MerchantWallet }
+import from ..nodes.Merchant { Merchant }
+import from ..nodes.MerchantWallet { MerchantWallet }
 
 def find_merchant(merchant_id: str) -> Merchant {
     for merchant in [root()-->][?:Merchant] {
