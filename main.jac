@@ -1,5 +1,4 @@
 import from config {
-    IntegrationConfig,
     seed_demo_config,
     list_configs
 }
@@ -8,6 +7,7 @@ import from app_platform {
     bootstrap_platform,
     get_platform_overview
 }
+import from nodes.IntegrationConfig { IntegrationConfig }
 import from nodes.Merchant { Merchant }
 import from nodes.MerchantWallet { MerchantWallet }
 import from nodes.Invoice { Invoice }
@@ -60,7 +60,7 @@ import from services.audit {
 }
 
 cl import ".styles.global.css";
-cl import from .components.AuthPortal { AuthPortal }
+cl import from components.AuthPortal { AuthPortal }
 
 cl def:pub app -> JsxElement {
     return <AuthPortal />;

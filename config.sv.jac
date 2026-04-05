@@ -1,6 +1,6 @@
 import from datetime { datetime }
 import os;
-import from .nodes.IntegrationConfig { IntegrationConfig }
+import from nodes.IntegrationConfig { IntegrationConfig }
 
 def env_or(env_name: str, fallback: str) -> str {
     value = os.getenv(env_name);

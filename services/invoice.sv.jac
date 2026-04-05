@@ -1,8 +1,8 @@
 import from datetime { datetime, timedelta }
-import from ..nodes.Invoice { Invoice }
-import from ..nodes.Merchant { Merchant }
-import from ..nodes.MerchantWallet { MerchantWallet }
-import from .merchant { find_merchant }
+import from nodes.Invoice { Invoice }
+import from nodes.Merchant { Merchant }
+import from nodes.MerchantWallet { MerchantWallet }
+import from services.merchant { find_merchant }
 
 def find_invoice(invoice_id: str) -> Invoice {
     for invoice in [root()-->][?:Invoice] {

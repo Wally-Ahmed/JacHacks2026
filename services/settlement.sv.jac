@@ -1,10 +1,10 @@
 import from datetime { datetime }
-import from ..nodes.TreasuryLot { TreasuryLot }
-import from ..nodes.Payout { Payout }
-import from ..nodes.Invoice { Invoice }
-import from ..nodes.InvoiceWallet { InvoiceWallet }
-import from .invoice { find_invoice }
-import from .wallets { create_invoice_wallet, find_invoice_wallet }
+import from nodes.TreasuryLot { TreasuryLot }
+import from nodes.Payout { Payout }
+import from nodes.Invoice { Invoice }
+import from nodes.InvoiceWallet { InvoiceWallet }
+import from services.invoice { find_invoice }
+import from services.wallets { create_invoice_wallet, find_invoice_wallet }
 
 def get_or_create_treasury_lot() -> TreasuryLot {
     for lot in [root()-->][?:TreasuryLot] {

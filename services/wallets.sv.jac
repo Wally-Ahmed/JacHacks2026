@@ -1,7 +1,7 @@
 import from datetime { datetime, timedelta }
-import from ..nodes.InvoiceWallet { InvoiceWallet }
-import from ..nodes.Invoice { Invoice }
-import from .invoice { find_invoice }
+import from nodes.InvoiceWallet { InvoiceWallet }
+import from nodes.Invoice { Invoice }
+import from services.invoice { find_invoice }
 
 def find_invoice_wallet(invoice: Invoice) -> InvoiceWallet {
     for wallet in [invoice-->][?:InvoiceWallet] {

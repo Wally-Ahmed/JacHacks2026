@@ -1,7 +1,8 @@
 import from datetime { datetime }
 import os;
-import from .config { IntegrationConfig, seed_demo_config }
-import from .nodes.Platform { Platform }
+import from config { seed_demo_config }
+import from nodes.IntegrationConfig { IntegrationConfig }
+import from nodes.Platform { Platform }
 
 def get_platform_node() -> Platform {
     for item in [root()-->][?:Platform] {
