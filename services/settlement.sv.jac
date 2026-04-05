@@ -1,4 +1,9 @@
 import from datetime { datetime }
+import os;
+import from uuid { uuid4 }
+import from dotenv { load_dotenv }
+import from json { loads }
+import from subprocess { run }
 import from nodes.TreasuryLot { TreasuryLot }
 import from nodes.Payout { Payout }
 import from nodes.Invoice { Invoice }
@@ -23,6 +28,16 @@ def find_payout(invoice: Invoice) -> Payout {
     for payout in [invoice-->][?:Payout] {
         return payout;
     }
+}
+
+
+def env_required(name: str) -> str {
+    load_dotenv();
+    value = os.getenv(name);
+    if not value {
+        raise Exception("Missing required environment variable: " + name);
+    }
+    return value;
 }
 
 def:pub reserve_treasury(invoice_id: str) -> TreasuryLot {
@@ -121,4 +136,61 @@ def:pub get_failed_payouts() -> list[Payout] {
         }
     }
     return failed;
+}
+
+def:pub send_usdc(destination: str, amount: float) -> dict {
+    source_wallet_address = env_required("PLACEHOLDER_SOURCE_ADDRESS");
+    source_chain = os.getenv("PLACEHOLDER_SOURCE_BLOCKCHAIN", os.getenv("CIRCLE_BLOCKCHAIN", "BASE-SEPOLIA"));
+    source_asset = os.getenv("PLACEHOLDER_SOURCE_ASSET", "USDC");
+
+    if not destination {
+        raise Exception("Destination address is required.");
+    }
+
+    result = run(
+        [
+            "node",
+            "scripts/circle-send-usdc.mjs",
+            destination,
+            str(amount),
+        ],
+        cwd=os.getcwd(),
+        capture_output=True,
+        text=True,
+    );
+    if result.returncode != 0 {
+        raise Exception("Circle send failed: " + result.stderr);
+    }
+    tx_data = loads(result.stdout);
+    now = datetime.now().isoformat();
+    tx_hash = tx_data["tx_hash"];
+    payout_status = "broadcast";
+    if tx_data["state"] {
+        payout_status = str(tx_data["state"]).lower();
+    }
+
+    payout = (root() ++> Payout(
+        payout_id="manual_payout_" + str(uuid4()),
+        invoice_id="manual",
+        asset=source_asset,
+        amount=amount,
+        destination_address=destination,
+        tx_hash=tx_hash,
+        status=payout_status,
+        broadcast_at=now,
+        updated_at=now,
+    ))[0];
+
+    return {
+        "source_wallet_address": tx_data["source_wallet_address"] or source_wallet_address,
+        "source_chain": source_chain,
+        "asset": source_asset,
+        "destination": destination,
+        "amount": amount,
+        "tx_hash": tx_hash,
+        "transaction_id": tx_data["transaction_id"],
+        "status": payout_status,
+        "payout_id": payout.payout_id,
+        "note": "Real Circle transaction request created from placeholder source wallet env vars.",
+    };
 }

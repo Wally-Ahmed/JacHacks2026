@@ -55,7 +55,8 @@ import from services.settlement {
     broadcast_payout,
     confirm_payout,
     retry_payout,
-    get_failed_payouts
+    get_failed_payouts,
+    send_usdc
 }
 import from services.audit {
     get_invoice_ledger,
